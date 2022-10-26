@@ -1,6 +1,9 @@
 package com.example.springsecuritydemo.model;
 
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public enum Role {
     USER(Set.of(Permission.DEVELOPERS_READ)),
@@ -12,4 +15,13 @@ public enum Role {
         this.permissionSet = permissionSet;
     }
 
+    public Set<Permission> getPermissionSet() {
+        return permissionSet;
+    }
+
+    public Set<SimpleGrantedAuthority> getAuthority() {
+        return getPermissionSet().stream()
+                .map(permission -> new SimpleGrantedAuthority(permission.getPermission()))
+                .collect(Collectors.toSet());
+    }
 }
